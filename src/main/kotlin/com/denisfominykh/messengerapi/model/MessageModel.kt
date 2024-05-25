@@ -9,12 +9,14 @@ import java.time.Instant
 class MessageModel (
     @Id
     val id: Long,
+    val text: String,
     val senderId: Long,
     val timestamp: Instant,
     val chatId: Long,
 ) {
     fun intoCore() = Message(
         id,
+        text,
         senderId,
         timestamp,
         chatId
@@ -23,7 +25,8 @@ class MessageModel (
     companion object {
          fun fromCore(message: Message): MessageModel {
              return MessageModel(
-                 message.id,
+                 requireNotNull(message.id),
+                 message.text,
                  message.senderId,
                  message.timestamp,
                  message.chatId

@@ -10,4 +10,20 @@ data class OperationData(
         DESTROY,
         CREATE
     }
+
+    companion object {
+        fun create(affectedMessageId: Long, affectedChatId: Long, sender: Long) = OperationData(
+            OperationType.CREATE,
+            affectedMessageId,
+            affectedChatId,
+            sender
+        )
+
+        fun delete(affectedMessageId: Long, affectedChatId: Long, sender: Long) = OperationData(
+            OperationType.DESTROY,
+            affectedMessageId,
+            affectedChatId,
+            sender
+        )
+    }
 }
