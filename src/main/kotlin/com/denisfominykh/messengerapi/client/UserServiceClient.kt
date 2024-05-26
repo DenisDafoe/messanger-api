@@ -1,6 +1,7 @@
 package com.denisfominykh.messengerapi.client
 
 import com.denisfominykh.messengerapi.client.internal.ExchangeResponse
+import com.denisfominykh.messengerapi.client.internal.LoginResponse
 import com.denisfominykh.messengerapi.user.UserData
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -11,7 +12,6 @@ import java.time.Duration
 class UserServiceClient(
     webClientBuilder: WebClient.Builder
 ){
-    // TODO: PROPERTIES
     private val webClient = webClientBuilder.baseUrl("http://158.160.3.23:8080").build()
 
     fun getSomeData(endpoint: String): Mono<String> {
@@ -24,11 +24,19 @@ class UserServiceClient(
     fun <T> getSomeDataWithBody(endpoint: String, body: String, resultClass: Class<T>): Mono<T> {
         return webClient.post()
             .uri(endpoint)
+            .header("Content-Type", "application/json")
             .body(Mono.just(body), String::class.java)
             .retrieve()
             .bodyToMono(resultClass)
     }
     // ---
+
+    fun requestUserToken(userName: String, pass: String, ): String {
+        val result = getSomeDataWithBody("/user/login", lazyLoginBodyStringification(userName, pass), LoginResponse::class.java)
+            .block(DEFAULT_TIMEOUT)!!
+
+        return result.userToken.token
+    }
 
     fun requestUserDataByToken(token: String): UserData {
         val result = getSomeDataWithBody("/user/exchange", token, ExchangeResponse::class.java).block(DEFAULT_TIMEOUT)!!
@@ -37,6 +45,9 @@ class UserServiceClient(
 
         return UserData(result.id!!, result.region!!)
     }
+
+    private fun lazyLoginBodyStringification(userName: String, password: String) =
+        "{\"userName\":\"$userName\",\"hashedPassword\":\"$password\"}"
 
     companion object {
         val DEFAULT_TIMEOUT = Duration.parse("PT10S")!!
