@@ -29,6 +29,12 @@ class MessengerServiceImpl(
         return deleteMessage(authUser, chatId, messageId)
     }
 
+    override fun readFromChat(token: String, chatId: Long, number: Int): List<Message> {
+        val authUser = clientService.requestUserDataByToken(token)
+
+        return messageStorageService.getNumberFromChat(chatId, number)
+    }
+
     private fun newMessage(user: UserData, chatId: Long): OperationResult {
         val randomText = getRandomString(50)
 

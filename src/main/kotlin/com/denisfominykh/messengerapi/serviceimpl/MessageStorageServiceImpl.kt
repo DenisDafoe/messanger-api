@@ -6,6 +6,8 @@ import com.denisfominykh.messengerapi.model.SequenceModel
 import com.denisfominykh.messengerapi.repository.MessageRepository
 import com.denisfominykh.messengerapi.repository.SequenceRepository
 import com.denisfominykh.messengerapi.service.MessageStorageService
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
 
@@ -28,8 +30,17 @@ class MessageStorageServiceImpl(
         return messageRepository.findAllByChatId(chatId).map { it.intoCore() }
     }
 
+    override fun getNumberFromChat(chatId: Long, number: Int): List<Message> {
+        return findLastNMessages(chatId, number).map { it.intoCore() }
+    }
+
     override fun delete(messageId: Long) {
         messageRepository.deleteById(messageId)
+    }
+
+    private fun findLastNMessages(chatId: Long, number: Int): List<MessageModel> {
+        val pageable = PageRequest.of(0, number, Sort.by(Sort.Direction.DESC, "timestamp"))
+        return messageRepository.findAllByChatIdOrderByTimestampDesc(chatId, pageable)
     }
 
     private fun updateSequence(lastId: Long) {
