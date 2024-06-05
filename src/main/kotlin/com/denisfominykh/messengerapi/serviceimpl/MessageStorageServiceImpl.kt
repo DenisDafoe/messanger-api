@@ -8,19 +8,19 @@ import com.denisfominykh.messengerapi.repository.SequenceRepository
 import com.denisfominykh.messengerapi.service.MessageStorageService
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
-import kotlin.jvm.optionals.getOrNull
 
 @Service
 class MessageStorageServiceImpl(
     private val messageRepository: MessageRepository,
     private val sequenceRepository: SequenceRepository,
+    private val mongoTemplate: MongoTemplate,
 ): MessageStorageService {
     override fun save(message: Message): Message {
         if (message.id == null) {
-            val currentId = sequenceRepository.findById("message").getOrNull()?.idNumber ?: initSequence()
-            updateSequence(currentId)
-            return messageRepository.save(MessageModel.fromCore(message.withId(currentId))).intoCore()
+            return messageRepository.save(MessageModel.fromCore(message)).intoCore()
         }
 
         return messageRepository.save(MessageModel.fromCore(message)).intoCore()
@@ -34,20 +34,13 @@ class MessageStorageServiceImpl(
         return findLastNMessages(chatId, number).map { it.intoCore() }
     }
 
-    override fun delete(messageId: Long) {
+    override fun delete(messageId: String) {
         messageRepository.deleteById(messageId)
     }
 
     private fun findLastNMessages(chatId: Long, number: Int): List<MessageModel> {
+
         val pageable = PageRequest.of(0, number, Sort.by(Sort.Direction.DESC, "timestamp"))
         return messageRepository.findAllByChatIdOrderByTimestampDesc(chatId, pageable)
-    }
-
-    private fun updateSequence(lastId: Long) {
-        sequenceRepository.save(SequenceModel("message", lastId+1))
-    }
-
-    private fun initSequence(): Long {
-        return sequenceRepository.save(SequenceModel("message", 1)).idNumber
     }
 }

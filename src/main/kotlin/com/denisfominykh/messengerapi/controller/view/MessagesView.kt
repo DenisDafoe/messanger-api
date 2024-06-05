@@ -4,7 +4,7 @@ import com.denisfominykh.messengerapi.message.Message
 import java.time.Instant
 
 data class MessagesView (
-    val id: Long,
+    val id: String,
     val text: String,
     val senderId: Long,
     val timestamp: Instant,

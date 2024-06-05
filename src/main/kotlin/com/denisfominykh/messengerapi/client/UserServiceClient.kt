@@ -12,7 +12,8 @@ import java.time.Duration
 class UserServiceClient(
     webClientBuilder: WebClient.Builder
 ){
-    private val webClient = webClientBuilder.baseUrl("http://158.160.3.23:8080").build()
+    private val webClient = webClientBuilder.baseUrl("http://84.201.138.104:2123").build()
+//    private val webClient = webClientBuilder.baseUrl("http://localhost:2123").build()
 
     fun getSomeData(endpoint: String): Mono<String> {
         return webClient.get()
@@ -40,8 +41,6 @@ class UserServiceClient(
 
     fun requestUserDataByToken(token: String): UserData {
         val result = getSomeDataWithBody("/user/exchange", token, ExchangeResponse::class.java).block(DEFAULT_TIMEOUT)!!
-
-        // TODO: RETRIES ETC
 
         return UserData(result.id!!, result.region!!)
     }

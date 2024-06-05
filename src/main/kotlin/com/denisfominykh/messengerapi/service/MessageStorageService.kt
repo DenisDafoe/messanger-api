@@ -9,5 +9,5 @@ interface MessageStorageService {
 
     fun getNumberFromChat(chatId: Long, number: Int): List<Message>
 
-    fun delete(messageId: Long)
+    fun delete(messageId: String)
 }

@@ -2,7 +2,7 @@ package com.denisfominykh.messengerapi.result
 
 data class OperationData(
     val operationType: OperationType,
-    val affectedMessageId: Long?,
+    val affectedMessageId: String?,
     val affectedChatId: Long?,
     val requesterId: Long?
 ) {
@@ -12,14 +12,14 @@ data class OperationData(
     }
 
     companion object {
-        fun create(affectedMessageId: Long, affectedChatId: Long, sender: Long) = OperationData(
+        fun create(affectedMessageId: String, affectedChatId: Long, sender: Long) = OperationData(
             OperationType.CREATE,
             affectedMessageId,
             affectedChatId,
             sender
         )
 
-        fun delete(affectedMessageId: Long, affectedChatId: Long, sender: Long) = OperationData(
+        fun delete(affectedMessageId: String, affectedChatId: Long, sender: Long) = OperationData(
             OperationType.DESTROY,
             affectedMessageId,
             affectedChatId,
