@@ -34,25 +34,25 @@ class MongoConfiguration : AbstractMongoClientConfiguration() {
                         .withWTimeout(5, TimeUnit.SECONDS),
                 ).credential(
                     MongoCredential.createScramSha256Credential(
-//                        "user",
-//                        "admin",
-//                        "password".toCharArray()
-
-                        "dionis",
+                        "user",
                         "admin",
-                        "I_h@t3_scr1pt_k1dd13s".toCharArray(),
+                        "password".toCharArray()
+
+//                        "dionis",
+//                        "admin",
+//                        "I_h@t3_scr1pt_k1dd13s".toCharArray(),
                     ),
                 )
                 .readPreference(ReadPreference.secondary())
                 .applyConnectionString(
                     ConnectionString(
-//                        "mongodb://user:password@localhost:27017/"
+                        "mongodb://user:password@localhost:27017/"
 
-                        "mongodb://dionis:I_h%40t3_scr1pt_k1dd13s@" +
-                                "rc1a-1ygi1svtru3v8isl.mdb.yandexcloud.net:27018," +
-                                "rc1b-m2t30uxwf7crilxu.mdb.yandexcloud.net:27018," +
-                                "rc1b-qvq903kx3s5stmaa.mdb.yandexcloud.net:27018/" +
-                                "userdata?authSource=admin",
+//                        "mongodb://dionis:I_h%40t3_scr1pt_k1dd13s@" +
+//                                "rc1a-1ygi1svtru3v8isl.mdb.yandexcloud.net:27018," +
+//                                "rc1b-m2t30uxwf7crilxu.mdb.yandexcloud.net:27018," +
+//                                "rc1b-qvq903kx3s5stmaa.mdb.yandexcloud.net:27018/" +
+//                                "userdata?authSource=admin",
                     ),
                 )
         return MongoClients.create(mongoClientSettings.build())
@@ -65,6 +65,10 @@ class MongoConfiguration : AbstractMongoClientConfiguration() {
     @Bean
     fun mongoTransactionManager(databaseFactory: MongoDatabaseFactory): MongoTransactionManager {
         return MongoTransactionManager(databaseFactory)
+    }
+
+    override fun autoIndexCreation(): Boolean {
+        return true
     }
 
     @Bean

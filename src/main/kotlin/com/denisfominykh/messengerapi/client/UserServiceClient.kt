@@ -10,10 +10,10 @@ import java.time.Duration
 
 @Service
 class UserServiceClient(
-    webClientBuilder: WebClient.Builder
-){
-    private val webClient = webClientBuilder.baseUrl("http://84.201.138.104:2123").build()
-//    private val webClient = webClientBuilder.baseUrl("http://localhost:2123").build()
+    webClientBuilder: WebClient.Builder,
+) {
+//    private val webClient = webClientBuilder.baseUrl("http://84.201.138.104:2123").build()
+    private val webClient = webClientBuilder.baseUrl("http://localhost:2123").build()
 
     fun getSomeData(endpoint: String): Mono<String> {
         return webClient.get()
@@ -22,7 +22,11 @@ class UserServiceClient(
             .bodyToMono(String::class.java)
     }
 
-    fun <T> getSomeDataWithBody(endpoint: String, body: String, resultClass: Class<T>): Mono<T> {
+    fun <T> getSomeDataWithBody(
+        endpoint: String,
+        body: String,
+        resultClass: Class<T>,
+    ): Mono<T> {
         return webClient.post()
             .uri(endpoint)
             .header("Content-Type", "application/json")
@@ -32,9 +36,13 @@ class UserServiceClient(
     }
     // ---
 
-    fun requestUserToken(userName: String, pass: String, ): String {
-        val result = getSomeDataWithBody("/user/login", lazyLoginBodyStringification(userName, pass), LoginResponse::class.java)
-            .block(DEFAULT_TIMEOUT)!!
+    fun requestUserToken(
+        userName: String,
+        pass: String,
+    ): String {
+        val result =
+            getSomeDataWithBody("/user/login", lazyLoginBodyStringification(userName, pass), LoginResponse::class.java)
+                .block(DEFAULT_TIMEOUT)!!
 
         return result.userToken.token
     }
@@ -45,8 +53,10 @@ class UserServiceClient(
         return UserData(result.id!!, result.region!!)
     }
 
-    private fun lazyLoginBodyStringification(userName: String, password: String) =
-        "{\"userName\":\"$userName\",\"hashedPassword\":\"$password\"}"
+    private fun lazyLoginBodyStringification(
+        userName: String,
+        password: String,
+    ) = "{\"userName\":\"$userName\",\"hashedPassword\":\"$password\"}"
 
     companion object {
         val DEFAULT_TIMEOUT = Duration.parse("PT10S")!!
