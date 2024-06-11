@@ -3,7 +3,6 @@ package com.denisfominykh.messengerapi.serviceimpl
 import com.denisfominykh.messengerapi.message.Message
 import com.denisfominykh.messengerapi.model.MessageModel
 import com.denisfominykh.messengerapi.repository.MessageRepository
-import com.denisfominykh.messengerapi.repository.SequenceRepository
 import com.denisfominykh.messengerapi.service.MessageStorageService
 import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service
 @Service
 class MessageStorageServiceImpl(
     private val messageRepository: MessageRepository,
-    private val sequenceRepository: SequenceRepository,
     private val mongoTemplate: MongoTemplate,
 ) : MessageStorageService {
     override fun save(message: Message): Message {

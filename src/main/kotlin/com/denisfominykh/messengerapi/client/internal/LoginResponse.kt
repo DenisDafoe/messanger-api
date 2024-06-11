@@ -2,12 +2,12 @@ package com.denisfominykh.messengerapi.client.internal
 
 import java.time.Instant
 
-data class LoginResponse (
+data class LoginResponse(
     val status: ExchangeResponse.ExchangeStatus,
-    val userToken: TokenResponse
+    val userToken: TokenResponse,
 )
 
-data class TokenResponse (
+data class TokenResponse(
     val token: String,
-    val willExpire: Instant
+    val willExpire: Instant,
 )

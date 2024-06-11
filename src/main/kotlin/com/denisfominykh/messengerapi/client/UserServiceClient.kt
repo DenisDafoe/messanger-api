@@ -12,8 +12,7 @@ import java.time.Duration
 class UserServiceClient(
     webClientBuilder: WebClient.Builder,
 ) {
-//    private val webClient = webClientBuilder.baseUrl("http://84.201.138.104:2123").build()
-    private val webClient = webClientBuilder.baseUrl("http://localhost:2123").build()
+    private val webClient = webClientBuilder.baseUrl("http://84.201.138.104:2123").build()
 
     fun getSomeData(endpoint: String): Mono<String> {
         return webClient.get()
@@ -34,7 +33,6 @@ class UserServiceClient(
             .retrieve()
             .bodyToMono(resultClass)
     }
-    // ---
 
     fun requestUserToken(
         userName: String,
